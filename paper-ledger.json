@@ -1,0 +1,98 @@
+{
+  "bankroll": {
+    "starting": 10000
+  },
+  "positions": [
+    {
+      "id": "solana:EBmGibyLQRAb1PReRkHWhhH9DVh38cbYovAUSbP1YooM:1787042612809",
+      "network": "solana",
+      "poolAddress": "EBmGibyLQRAb1PReRkHWhhH9DVh38cbYovAUSbP1YooM",
+      "name": "Z500 / USDC",
+      "sizeUsd": 250,
+      "entryPriceUsd": 0.001099166677198023,
+      "entryTime": "2026-08-18T08:43:32.811Z",
+      "status": "open",
+      "lastMarkPriceUsd": 0.001099166677198023,
+      "lastMarkTime": "2026-08-18T08:57:36.396Z",
+      "riskAtEntry": {
+        "level": "elevated",
+        "flags": [
+          "Pool is 0.3h old — unproven, most rugs happen in the first 24-48h.",
+          "FDV is 249x liquidity — paper valuation far outruns what's actually backing it."
+        ]
+      }
+    },
+    {
+      "id": "base:0xc42943241eb8a5f0d9dd235e784f4ac6c4a14971c111d557f1e15f0d94f3cee8:1787042613017",
+      "network": "base",
+      "poolAddress": "0xc42943241eb8a5f0d9dd235e784f4ac6c4a14971c111d557f1e15f0d94f3cee8",
+      "name": "USWS / WETH",
+      "sizeUsd": 250,
+      "entryPriceUsd": 0.0002314160595157,
+      "entryTime": "2026-08-18T08:43:33.017Z",
+      "status": "open",
+      "lastMarkPriceUsd": 0.0002314160595157,
+      "lastMarkTime": "2026-08-18T08:57:36.782Z",
+      "riskAtEntry": {
+        "level": "elevated",
+        "flags": [
+          "Pool is 0.4h old — unproven, most rugs happen in the first 24-48h."
+        ]
+      }
+    },
+    {
+      "id": "eth:0xde2975fbb3825c9ce073c0f67ad7606433456a3f:1787042613190",
+      "network": "eth",
+      "poolAddress": "0xde2975fbb3825c9ce073c0f67ad7606433456a3f",
+      "name": "TTMZ / USDT 0.01%",
+      "sizeUsd": 250,
+      "entryPriceUsd": 0.502664390190536,
+      "entryTime": "2026-08-18T08:43:33.190Z",
+      "status": "open",
+      "lastMarkPriceUsd": 0.502664390190536,
+      "lastMarkTime": "2026-08-18T08:57:37.134Z",
+      "riskAtEntry": {
+        "level": "elevated",
+        "flags": [
+          "Pool is 0.4h old — unproven, most rugs happen in the first 24-48h."
+        ]
+      }
+    },
+    {
+      "id": "solana:F9PuYf1G3FPcqMDZ1c64ZxQgGuorQnUsjccfY8yWsmFo:1787043457578",
+      "network": "solana",
+      "poolAddress": "F9PuYf1G3FPcqMDZ1c64ZxQgGuorQnUsjccfY8yWsmFo",
+      "name": "Milton Rat / SOL",
+      "sizeUsd": 250,
+      "entryPriceUsd": 0.00003720490142984913,
+      "entryTime": "2026-08-18T08:57:37.578Z",
+      "status": "open",
+      "lastMarkPriceUsd": 0.00003720490142984913,
+      "lastMarkTime": "2026-08-18T08:57:37.578Z",
+      "riskAtEntry": {
+        "level": "elevated",
+        "flags": [
+          "Pool is 0.3h old — unproven, most rugs happen in the first 24-48h."
+        ]
+      }
+    },
+    {
+      "id": "base:0xd0944331108215676db150563e81ceae65b0defb:1787043457737",
+      "network": "base",
+      "poolAddress": "0xd0944331108215676db150563e81ceae65b0defb",
+      "name": "EXPLO / WETH",
+      "sizeUsd": 250,
+      "entryPriceUsd": 0.00000369960253154909,
+      "entryTime": "2026-08-18T08:57:37.737Z",
+      "status": "open",
+      "lastMarkPriceUsd": 0.00000369960253154909,
+      "lastMarkTime": "2026-08-18T08:57:37.737Z",
+      "riskAtEntry": {
+        "level": "elevated",
+        "flags": [
+          "Pool is 0.4h old — unproven, most rugs happen in the first 24-48h."
+        ]
+      }
+    }
+  ]
+}

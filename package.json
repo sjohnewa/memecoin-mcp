@@ -1,0 +1,18 @@
+{
+  "name": "memecoin-mcp",
+  "version": "1.0.0",
+  "description": "Read-only wallet-spotting and rug-risk MCP server for memecoin pools, across chains, via GeckoTerminal's public API.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "demo": "node demo.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  }
+}

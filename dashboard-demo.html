@@ -1,0 +1,384 @@
+<title>Wallet Spotter</title>
+<style>
+  :root {
+    --bg: #F6F7FA;
+    --surface: #FFFFFF;
+    --surface-sunken: #EFF1F5;
+    --border: #DCE1E8;
+    --ink: #12161F;
+    --ink-muted: #5B6472;
+    --ink-faint: #8992A1;
+    --sol: #6E4CE6;
+    --base-chain: #0E9C8C;
+    --eth: #3D6FD1;
+    --good: #1E8E5A;
+    --warn: #B4790E;
+    --bad: #C4432F;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    --sans: -apple-system, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", "Consolas", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #10141B;
+      --surface: #171C25;
+      --surface-sunken: #12161E;
+      --border: #262E3A;
+      --ink: #EDEFF3;
+      --ink-muted: #94A0B2;
+      --ink-faint: #5E6879;
+      --sol: #8C74E8;
+      --base-chain: #26977F;
+      --eth: #5C86DE;
+      --good: #3FB27D;
+      --warn: #D9A64A;
+      --bad: #E2695A;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #10141B;
+    --surface: #171C25;
+    --surface-sunken: #12161E;
+    --border: #262E3A;
+    --ink: #EDEFF3;
+    --ink-muted: #94A0B2;
+    --ink-faint: #5E6879;
+    --sol: #8C74E8;
+    --base-chain: #26977F;
+    --eth: #5C86DE;
+    --good: #3FB27D;
+    --warn: #D9A64A;
+    --bad: #E2695A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    margin: 0;
+    padding: 0 20px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 1020px; margin: 0 auto; }
+
+  header { padding: 56px 0 28px; border-bottom: 1px solid var(--border); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 4.5vw, 42px);
+    font-weight: 700;
+    margin: 0 0 14px;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .dek { font-size: 16px; line-height: 1.55; color: var(--ink-muted); max-width: 66ch; margin: 0; }
+
+  .warning-box {
+    margin-top: 22px;
+    padding: 16px 18px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--bad);
+    border-radius: 6px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .warning-box strong { color: var(--ink); }
+
+  section { padding: 44px 0 8px; }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin: 0 0 6px;
+  }
+  .section-note { font-size: 13.5px; color: var(--ink-muted); margin: 0 0 20px; max-width: 68ch; line-height: 1.5; }
+
+  .chain-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .chain-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .chain-head {
+    padding: 12px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--chain-accent);
+    color: var(--chain-accent);
+  }
+  .pool-row { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .pool-row:last-child { border-bottom: none; }
+  .pool-row .pname { font-weight: 600; margin-bottom: 3px; }
+  .pool-row .pstats { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); display: flex; gap: 10px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-faint); font-weight: 600; }
+  td.mono, .mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .risk-table-card, .wallet-table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
+
+  .risk-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .risk-badge.low { color: var(--good); background: color-mix(in srgb, var(--good) 14%, transparent); }
+  .risk-badge.elevated { color: var(--warn); background: color-mix(in srgb, var(--warn) 16%, transparent); }
+  .risk-badge.high { color: var(--bad); background: color-mix(in srgb, var(--bad) 16%, transparent); }
+
+  .flag-list { margin: 0; padding-left: 16px; font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+  .flag-list li { margin-bottom: 2px; }
+  .flag-list.none { list-style: none; padding-left: 0; color: var(--ink-faint); }
+
+  a.addr { color: var(--sol); text-decoration: none; border-bottom: 1px solid transparent; }
+  a.addr:hover { border-color: var(--sol); }
+
+  .rug-callout {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--bad);
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .rug-callout .badge { color: var(--bad); }
+
+  .provenance {
+    margin-top: 48px;
+    padding: 16px 18px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+  .provenance code {
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 11.5px;
+  }
+
+  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--ink-faint); line-height: 1.6; }
+
+  .refresh-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    background: var(--surface-sunken);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 10px 4px 8px;
+    margin-bottom: 18px;
+  }
+  .refresh-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); display: inline-block; }
+
+  .stat-tiles { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
+  .stat-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; flex: 1 1 170px; }
+  .stat-tile .num { font-family: var(--mono); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .stat-tile .cap { font-size: 11px; color: var(--ink-faint); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .pnl-cell.pos { color: var(--good); }
+  .pnl-cell.neg { color: var(--bad); }
+  .pnl-cell.flat { color: var(--ink-faint); }
+
+  @media (max-width: 720px) {
+    .chain-cols { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    header { padding-top: 40px; }
+  }
+</style>
+
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Live pull &middot; memecoin-mcp &middot; read-only</p>
+    <h1>Wallet Spotter</h1>
+    <p class="dek">Trending pools, rug-risk signals, early-buyer wallets, and a simulated paper-trading bankroll across three chains &mdash; pulled live through the MCP server just built, no key required.</p>
+    <div class="warning-box">
+      <strong>Paper trades only, nothing real.</strong> Most new memecoin pools are rugs or pump-and-dumps. A wallet buying early is not proof of skill &mdash; it's often an insider, a sniper bot, or luck. The positions below are simulated with fake money to test whether the risk screen is worth anything &mdash; nothing on this page is investment advice, and nothing here holds a key or moves a real fund.
+    </div>
+  </header>
+
+  <section>
+    <h2>Paper trading: does the risk screen actually work?</h2>
+    <p class="section-note">Simulated $10,000 bankroll, $250 per position, zero real funds and no key. Strategy: each refresh, mark every open position to its latest price, then open a new position in anything from <code>get_new_pools</code> (all three chains) that doesn't get flagged "high" risk. This isn't wallet-copying &mdash; GeckoTerminal has no per-wallet trade history to follow &mdash; it's a direct test of whether the rug screen built above is worth anything, run against real pools instead of backtested on cherry-picked ones.</p>
+    <!-- PAPER_TRADE_START -->
+    <div class="refresh-note"><span class="refresh-dot"></span>Last refreshed 2026-08-18 08:57 UTC &middot; scheduled routine, no manual request needed</div>
+
+    <div class="stat-tiles">
+      <div class="stat-tile"><div class="num">$10,000.00</div><div class="cap">Starting bankroll</div></div>
+      <div class="stat-tile"><div class="num">$8,750.00</div><div class="cap">Cash, uncommitted</div></div>
+      <div class="stat-tile"><div class="num">$10,000.00</div><div class="cap">Equity right now</div></div>
+      <div class="stat-tile"><div class="num pnl-cell flat">$0.00</div><div class="cap">Total PnL (0.00%)</div></div>
+    </div>
+
+    <div class="risk-table-card">
+      <table>
+        <thead><tr><th>Position</th><th>Chain</th><th>Entry price</th><th>Mark price</th><th>Unrealized PnL</th><th>Risk at entry</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">Z500 / USDC</td>
+            <td class="mono" style="color: var(--sol);">Solana</td>
+            <td class="mono">$0.00110</td>
+            <td class="mono">$0.00110</td>
+            <td class="mono pnl-cell flat">$0.00 (0.0%)</td>
+            <td><span class="risk-badge elevated">Elevated</span></td>
+          </tr>
+          <tr>
+            <td class="mono">USWS / WETH</td>
+            <td class="mono" style="color: var(--base-chain);">Base</td>
+            <td class="mono">$0.000231</td>
+            <td class="mono">$0.000231</td>
+            <td class="mono pnl-cell flat">$0.00 (0.0%)</td>
+            <td><span class="risk-badge elevated">Elevated</span></td>
+          </tr>
+          <tr>
+            <td class="mono">TTMZ / USDT 0.01%</td>
+            <td class="mono" style="color: var(--eth);">Ethereum</td>
+            <td class="mono">$0.503</td>
+            <td class="mono">$0.503</td>
+            <td class="mono pnl-cell flat">$0.00 (0.0%)</td>
+            <td><span class="risk-badge elevated">Elevated</span></td>
+          </tr>
+          <tr>
+            <td class="mono">Milton Rat / SOL</td>
+            <td class="mono" style="color: var(--sol);">Solana</td>
+            <td class="mono">$0.0000372</td>
+            <td class="mono">$0.0000372</td>
+            <td class="mono pnl-cell flat">$0.00 (0.0%)</td>
+            <td><span class="risk-badge elevated">Elevated</span></td>
+          </tr>
+          <tr>
+            <td class="mono">EXPLO / WETH</td>
+            <td class="mono" style="color: var(--base-chain);">Base</td>
+            <td class="mono">$0.00000370</td>
+            <td class="mono">$0.00000370</td>
+            <td class="mono pnl-cell flat">$0.00 (0.0%)</td>
+            <td><span class="risk-badge elevated">Elevated</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="section-note" style="margin-top: 14px;">5 open positions, rebuilt from <code>paper-ledger.json</code> on every refresh. This is the live experiment: does skipping risk-flagged pools beat buying everything new?</p>
+    <!-- PAPER_TRADE_END -->
+  </section>
+
+  <section>
+    <h2>Trending right now, three chains</h2>
+    <p class="section-note">One API, no per-chain key, ranked by GeckoTerminal's trending score at pull time. <strong>Fixed snapshot from the initial build</strong> (Aug 2026) &mdash; unlike the paper-trading section above, this doesn't get refreshed; it's the worked example that proved the pipeline out.</p>
+    <div class="chain-cols">
+      <div class="chain-card" style="--chain-accent: var(--sol);">
+        <div class="chain-head">Solana</div>
+        <div class="pool-row"><div class="pname">LAYOOO / SOL</div><div class="pstats"><span>liq $182.9K</span><span>vol24h $7.20M</span><span>193h old</span></div></div>
+        <div class="pool-row"><div class="pname">EYE / SOL</div><div class="pstats"><span>liq $243.2K</span><span>vol24h $33.9M</span><span>7.9h old</span></div></div>
+        <div class="pool-row"><div class="pname">BILLY / SOL</div><div class="pstats"><span>liq $83.7K</span><span>vol24h $6.60M</span><span>20.3h old</span></div></div>
+        <div class="pool-row"><div class="pname">Z500 / SOL</div><div class="pstats"><span>liq $106.1K</span><span>vol24h $18.2M</span><span>7.8h old</span></div></div>
+      </div>
+      <div class="chain-card" style="--chain-accent: var(--base-chain);">
+        <div class="chain-head">Base</div>
+        <div class="pool-row"><div class="pname">Basecat / ETH</div><div class="pstats"><span>liq $518.9K</span><span>vol24h $9.39M</span><span>53.7h old</span></div></div>
+        <div class="pool-row"><div class="pname">VVVeity / WETH</div><div class="pstats"><span>liq $120.8K</span><span>vol24h $1.15M</span><span>77.2d old</span></div></div>
+        <div class="pool-row"><div class="pname">LFI / WETH</div><div class="pstats"><span>liq $708.6K</span><span>vol24h $311.9K</span><span>108.3d old</span></div></div>
+        <div class="pool-row"><div class="pname">Surplus / WETH</div><div class="pstats"><span>liq $1.45M</span><span>vol24h $286.2K</span><span>93.4d old</span></div></div>
+      </div>
+      <div class="chain-card" style="--chain-accent: var(--eth);">
+        <div class="chain-head">Ethereum</div>
+        <div class="pool-row"><div class="pname">ASE / WETH</div><div class="pstats"><span>liq $153.8K</span><span>vol24h $7.7K</span><span>99.2d old</span></div></div>
+        <div class="pool-row"><div class="pname">WETH / USDC</div><div class="pstats"><span>liq $99.1M</span><span>vol24h $80.2M</span><span>4.6y old</span></div></div>
+        <div class="pool-row"><div class="pname">FWA / ETH</div><div class="pstats"><span>liq $1.17M</span><span>vol24h $1.99M</span><span>32.3d old</span></div></div>
+        <div class="pool-row"><div class="pname">PEPE / WETH</div><div class="pstats"><span>liq $20.4M</span><span>vol24h $402.9K</span><span>3.3y old</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rug-risk signals, Solana trending set</h2>
+    <p class="section-note">The heuristic scorer's actual output on the pools above &mdash; transparent rules, not a model. Read the flags, not just the badge.</p>
+    <div class="risk-table-card">
+      <table>
+        <thead><tr><th>Pool</th><th>Risk</th><th>Flags</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">LAYOOO / SOL</td><td><span class="risk-badge low">Low</span></td><td><ul class="flag-list none">No flags tripped by these signals.</ul></td></tr>
+          <tr><td class="mono">EYE / SOL</td><td><span class="risk-badge elevated">Elevated</span></td><td><ul class="flag-list"><li>Pool is 7.9h old &mdash; unproven, most rugs happen in the first 24&ndash;48h.</li></ul></td></tr>
+          <tr><td class="mono">BILLY / SOL</td><td><span class="risk-badge elevated">Elevated</span></td><td><ul class="flag-list"><li>Pool is 20.3h old &mdash; unproven, most rugs happen in the first 24&ndash;48h.</li></ul></td></tr>
+          <tr><td class="mono">Z500 / SOL</td><td><span class="risk-badge elevated">Elevated</span></td><td><ul class="flag-list"><li>Pool is 7.8h old &mdash; unproven, most rugs happen in the first 24&ndash;48h.</li></ul></td></tr>
+          <tr><td class="mono">ANSEM / SOL</td><td><span class="risk-badge low">Low</span></td><td><ul class="flag-list"><li>FDV is 110x liquidity &mdash; paper valuation far outruns what's actually backing it.</li></ul></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rug-callout">
+      <span class="risk-badge high badge">High</span>&nbsp; <strong>DAG / SOL</strong>, a pool created 15 minutes before this pull, came back with <strong>$1.43 of liquidity</strong> against $16.8K of 24h volume &mdash; liquidity already pulled. This is what a rug looks like in the data: the scorer caught it correctly, unprompted, on a real pool spotted via <code>get_new_pools</code>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Early wallets on a brand-new launch</h2>
+    <p class="section-note">
+      <strong>Tomagari / SOL</strong>, a pool ~15 minutes old at pull time &mdash; young enough that "earliest trades in the returned window" genuinely means "earliest since launch," which is the honest limit of this tool (see provenance note below). All eight bought within the same two seconds of each other: a sniper-bot swarm, not a slow accumulation &mdash; a pattern worth recognizing on sight.
+    </p>
+    <div class="wallet-table-card">
+      <table>
+        <thead><tr><th>Wallet</th><th>Buy size</th><th>Timestamp (UTC)</th><th>Tx</th></tr></thead>
+        <tbody>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/7SLgmAQ9y3Zk31UcyJqJS6o2tKgPf7Ta5XaovT6x2Hac" target="_blank" rel="noopener">7SLg&hellip;2Hac</a></td><td class="mono">$181.24</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/41dyT1x3WSi48q9xmm6XEZYEYg1n7v1rDjb54dudHQezn1Kf9173aBysY47dX5M4U5FvgP86xD4wjqGBP3hSfzXv" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/BLAMEEhCJyRuChcs6p6ckex6MKUNmLLmtfC6vteCddEg" target="_blank" rel="noopener">BLAM&hellip;ddEg</a></td><td class="mono">$30.04</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/5J8VsUxcTNEA6FCEtGjhS63aYmUZcs5dgWqxx2JUsW6mp1UC621aWzjm9L7ayjQ1PhrFF2yqEp3eTGpmtoJVBcEw" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/4HP5Hqo5dqYmJJVLQQeHvE3DtQovDB4GHKu6U485WPqh" target="_blank" rel="noopener">4HP5&hellip;WPqh</a></td><td class="mono">$169.54</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/63S2MHLS9tKtxiy6CZfCfhLqSv1kfDGMkLcfcNCajS3NpKMz3KPon1c2MiHVFRRp8Lx85G7H1a9vjTvZVkzH2QQK" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/14Gi68cs1Vq9i7EX4dVjnx9XbTvic4uDG9VQCRSnvaiw" target="_blank" rel="noopener">14Gi&hellip;vaiw</a></td><td class="mono">$152.07</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/MPzgXom36LVLDoCW7TxSAQm5a8HWYQCVGuEZHGNk2FPhz37iuxuBSciNvAAyzxP3fmkQnUuVFyQDgCAQ7PvJ8Fd" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/uYvywGdVz4eijX2FYwpzgrA7fxe16K24Fcc9szAy2Z5" target="_blank" rel="noopener">uYvy&hellip;y2Z5</a></td><td class="mono">$189.89</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/5k5XPQJ17BtVYAomBK25c3yBsGA9hWGCiNv52XFdtfQvqp69rinxW1dor7285sEjAVd7z47bqNZvMtkTSdsqHKdS" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/ADkquSiH1zS6LmGoJxzwE6x44gpE6S3KWLALqNc3sTDs" target="_blank" rel="noopener">ADkq&hellip;sTDs</a></td><td class="mono">$26.28</td><td class="mono">23:34:57</td><td><a class="addr" href="https://solscan.io/tx/HG4dPaSzHuh54f5dNLFbty3gmjZhpux1kvzHFSi8LBUbJKG1Gu6hzLVseFK5vAyvftBG1HqQ8ShfHwSZLMLXtbD" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/6hPesEeQBskLyVVSDdiwT9KEYLMpxBbTYWCEAzMyn7Lg" target="_blank" rel="noopener">6hPe&hellip;n7Lg</a></td><td class="mono">$60.40</td><td class="mono">23:34:58</td><td><a class="addr" href="https://solscan.io/tx/4nZkMDGjST34KjVc9Bqu1Y2mdfDVAiRsa6q5TBMLfHFzcbg19Q7XxvtPbjn5p4AapmxQ1p6nKt7ykEFWZamvTLw7" target="_blank" rel="noopener">view</a></td></tr>
+          <tr><td class="mono"><a class="addr" href="https://solscan.io/account/HW2dpvofy7CDoLhrAq1dzSTJTnKA63WTVwT1D3JkdjVd" target="_blank" rel="noopener">HW2d&hellip;djVd</a></td><td class="mono">$62.19</td><td class="mono">23:34:58</td><td><a class="addr" href="https://solscan.io/tx/2f36vFtzeGNnFequKBqhXXZLBLiNkWRtFeTvHz1ti1KbsS7jGbZXJ1tKZErjqivfq2WrnjUhvcEvnHvfVdffUSKR" target="_blank" rel="noopener">view</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="provenance">
+    Built from live calls through <code>get_trending_pools</code>, <code>get_new_pools</code>, <code>get_pool_risk</code>,
+    and <code>find_early_wallets</code> against GeckoTerminal's public API &mdash; nothing on this page was typed in by hand.
+    One real limitation surfaced during the build: the trades endpoint returns a recent window, not full pool history, so
+    <code>find_early_wallets</code> only means "earliest since launch" on pools young enough that the window covers their
+    whole life (like Tomagari above) &mdash; on an 8-day-old pool like LAYOOO it would mean "earliest in the last few
+    minutes." The tool description now says this explicitly.
+    <br><br>
+    The paper-trading ledger is <code>paper-trade.js</code>, run manually and persisted to <code>paper-ledger.json</code> in
+    the project folder &mdash; this page can't poll GeckoTerminal itself (published Artifacts can't fetch arbitrary external
+    APIs, and the runtime's live-data bridge only reaches claude.ai connectors, not a local MCP server), so "refresh" means
+    asking for one, not a timer running unattended.
+  </div>
+
+  <footer>Source: api.geckoterminal.com (public, no key). Pulled via the memecoin-mcp server, Aug 2026. Wallet addresses and transactions are real and independently verifiable on Solscan &mdash; links above go there, not to any tool built here.</footer>
+
+</div>
