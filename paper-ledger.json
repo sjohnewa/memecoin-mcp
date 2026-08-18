@@ -12,8 +12,8 @@
       "entryPriceUsd": 0.001099166677198023,
       "entryTime": "2026-08-18T08:43:32.811Z",
       "status": "open",
-      "lastMarkPriceUsd": 0.001099166677198023,
-      "lastMarkTime": "2026-08-18T08:57:36.396Z",
+      "lastMarkPriceUsd": 0.001099854483593569,
+      "lastMarkTime": "2026-08-18T10:39:51.868Z",
       "riskAtEntry": {
         "level": "elevated",
         "flags": [
@@ -31,8 +31,8 @@
       "entryPriceUsd": 0.0002314160595157,
       "entryTime": "2026-08-18T08:43:33.017Z",
       "status": "open",
-      "lastMarkPriceUsd": 0.0002314160595157,
-      "lastMarkTime": "2026-08-18T08:57:36.782Z",
+      "lastMarkPriceUsd": 0.000232268839199879,
+      "lastMarkTime": "2026-08-18T10:39:52.327Z",
       "riskAtEntry": {
         "level": "elevated",
         "flags": [
@@ -50,7 +50,7 @@
       "entryTime": "2026-08-18T08:43:33.190Z",
       "status": "open",
       "lastMarkPriceUsd": 0.502664390190536,
-      "lastMarkTime": "2026-08-18T08:57:37.134Z",
+      "lastMarkTime": "2026-08-18T10:39:52.660Z",
       "riskAtEntry": {
         "level": "elevated",
         "flags": [
@@ -68,7 +68,7 @@
       "entryTime": "2026-08-18T08:57:37.578Z",
       "status": "open",
       "lastMarkPriceUsd": 0.00003720490142984913,
-      "lastMarkTime": "2026-08-18T08:57:37.578Z",
+      "lastMarkTime": "2026-08-18T10:39:52.962Z",
       "riskAtEntry": {
         "level": "elevated",
         "flags": [
@@ -85,8 +85,8 @@
       "entryPriceUsd": 0.00000369960253154909,
       "entryTime": "2026-08-18T08:57:37.737Z",
       "status": "open",
-      "lastMarkPriceUsd": 0.00000369960253154909,
-      "lastMarkTime": "2026-08-18T08:57:37.737Z",
+      "lastMarkPriceUsd": 0.00000417582288314984,
+      "lastMarkTime": "2026-08-18T10:39:53.302Z",
       "riskAtEntry": {
         "level": "elevated",
         "flags": [
