@@ -42,6 +42,24 @@ or add by hand:
 }
 ```
 
+## Unattended refresh (scheduled routine)
+
+The dashboard's paper-trading section is now machine-regenerable:
+`paper-trade.js` marks/screens positions into `paper-ledger.json`, then
+`build-dashboard.js` rewrites the block between `<!-- PAPER_TRADE_START -->`
+and `<!-- PAPER_TRADE_END -->` in `dashboard-demo.html` from that ledger.
+That's the whole pipeline a scheduled routine needs to run.
+
+**Blocked on**: this repo isn't on GitHub yet, and this machine has no `gh`
+CLI and no git credentials configured, so it can't be pushed from here
+unattended. To close the loop: install the GitHub CLI and run
+`gh auth login` once (interactive, one-time) — after that, push access and
+routine creation can happen from an agent session without further manual
+steps. The routine, once wired, would run roughly: `npm ci && node
+paper-trade.js && node build-dashboard.js`, then commit+push the updated
+ledger/dashboard, then republish the artifact at the URL pinned in the
+routine's own prompt.
+
 ## Paper trading
 
 ```
